@@ -1,0 +1,49 @@
+plugins {
+    // Apply the application plugin to add support for building a CLI application in Java.
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+
+    // Use JitPack for resolving dependencies.
+    maven { url 'https://jitpack.io' }
+
+    // Use the Panda repository for resolving LiteCommands.
+    maven { url 'https://repo.panda-lang.org/releases' }
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+
+    // Implement Minestom.
+    implementation 'net.minestom:minestom-snapshots:7320437640'
+
+    // Implement Toml4J.
+    implementation 'com.moandjiezana.toml:toml4j:0.7.2'
+
+    // Implement Polar.
+    implementation 'dev.hollowcube:polar:1.7.1'
+
+    // Implement picocli.
+    implementation 'info.picocli:picocli:4.7.5'
+
+    // Implement LiteCommands.
+    implementation 'dev.rollczi:litecommands-minestom:3.4.0'
+
+    // Implement Minimessage.
+    implementation 'net.kyori:adventure-text-minimessage:4.15.0'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'fuse_cli.FuseCLI'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}

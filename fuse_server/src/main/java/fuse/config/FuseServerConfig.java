@@ -59,6 +59,30 @@ public class FuseServerConfig extends Configuration {
             config.worlds.path = System.getenv("FUSE_WORLD_PROVIDER_PATH");
         }
 
+        if (System.getenv("FUSE_WORLD_DEFAULT_WORLD") != null) {
+            config.worlds.default_world = System.getenv("FUSE_WORLD_DEFAULT_WORLD");
+        }
+
+        if (System.getenv("FUSE_QUERY_MAX_PLAYERS") != null) {
+            config.query.max_players = Integer.parseInt(System.getenv("FUSE_QUERY_MAX_PLAYERS"));
+        }
+
+        if (System.getenv("FUSE_QUERY_HIDE_PLAYERS") != null) {
+            config.query.hide_players = Boolean.parseBoolean(System.getenv("FUSE_QUERY_HIDE_PLAYERS"));
+        }
+
+        if (System.getenv("FUSE_QUERY_MOTD") != null) {
+            config.query.motd = System.getenv("FUSE_QUERY_MOTD");
+        }
+
+        if (System.getenv("FUSE_QUERY_VERSION") != null) {
+            config.query.version = System.getenv("FUSE_QUERY_VERSION");
+        }
+
+        if (System.getenv("FUSE_QUERY_PLAYERS_SAMPLE") != null) {
+            config.query.playersSample = System.getenv("FUSE_QUERY_PLAYERS_SAMPLE").split(",");
+        }
+
         return config;
     }
 

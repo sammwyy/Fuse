@@ -1,5 +1,7 @@
 package fuse.plugins;
 
+import java.io.File;
+
 import dev.rollczi.litecommands.LiteCommandsBuilder;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.minestom.LiteMinestomFactory;
@@ -18,8 +20,10 @@ public class Plugin {
     private PluginState state;
     private LiteCommandsBuilder<CommandSender, LiteMinestomSettings, ?> commands;
     private I18nContainer translations;
+    private File dataFolder;
+    private File pluginFile;
 
-    protected void _init(PluginMetadata metadata, PluginManager manager) {
+    protected void _init(PluginMetadata metadata, PluginManager manager, File dataFolder, File pluginFile) {
         if (this.metadata != null) {
             throw new RuntimeException("Plugin already initialized");
         }
@@ -27,6 +31,8 @@ public class Plugin {
         this.metadata = metadata;
         this.manager = manager;
         this.state = PluginState.UNLOADED;
+        this.dataFolder = dataFolder;
+        this.pluginFile = pluginFile;
 
         if (this.manager.isPluginLoaded(this.getID())) {
             throw new RuntimeException("Plugin " + metadata.name + " already loaded");
@@ -52,6 +58,13 @@ public class Plugin {
     }
 
     // Getters
+    public File getFile() {
+        return this.pluginFile;
+    }
+
+    public File getDataFolder() {
+        return this.dataFolder;
+    }
 
     public PluginMetadata getMetaData() {
         return this.metadata;

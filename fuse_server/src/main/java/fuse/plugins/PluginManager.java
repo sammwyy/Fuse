@@ -1,18 +1,22 @@
 package fuse.plugins;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import fuse.events.EventManager;
+import fuse.plugins.loader.PluginLoader;
 import fuse.server.FuseServer;
 
 public class PluginManager {
     private Map<String, Plugin> plugins;
+    private PluginLoader loader;
     private FuseServer server;
 
     public PluginManager(FuseServer server) {
         this.plugins = new HashMap<>();
+        this.loader = new PluginLoader();
         this.server = server;
     }
 
@@ -32,28 +36,34 @@ public class PluginManager {
         return this.plugins.containsKey(name);
     }
 
-    public void loadPlugin(PluginMetadata data) {
+    public void startPlugin(Plugin plugin) {
+        EventManager eventManager = this.server.getEventManager();
+
+        // Put plugin on the map.
+        this.plugins.put(plugin.getID(), plugin);
+
+        // Register plugin in event manager.
+        eventManager.registerPlugin(plugin);
+
+        // Trying to start plugin.
+        plugin.onStart();
+        plugin.getCommands().build(true);
+        System.out.println("Loaded plugin " + plugin.getMetaData().name);
+    }
+
+    public void loadEmbeddedPlugin(PluginMetadata data) {
         Plugin plugin = null;
         EventManager eventManager = this.server.getEventManager();
 
         try {
             // Initialize plugin class.
-            Class<?> clazz = Class.forName(data.mainClass);
+            Class<?> clazz = Class.forName(data.main);
             plugin = (Plugin) clazz.getConstructors()[0].newInstance();
 
             // Initialize plugin state.
-            plugin._init(data, this);
+            plugin._init(data, this, null, null);
 
-            // Put plugin on the map.
-            this.plugins.put(plugin.getID(), plugin);
-
-            // Register plugin in event manager.
-            eventManager.registerPlugin(plugin);
-
-            // Trying to start plugin.
-            plugin.onStart();
-            plugin.getCommands().build(true);
-            System.out.println("Loaded plugin " + data.name);
+            this.startPlugin(plugin);
         } catch (Exception e) {
             System.out.println("Failed to load plugin " + data.name);
             e.printStackTrace();
@@ -69,7 +79,7 @@ public class PluginManager {
         }
     }
 
-    public void loadPlugin(Class<?> clazz) {
+    public void loadEmbeddedPlugin(Class<?> clazz) {
         EmbeddedPlugin annotation = clazz.getAnnotation(EmbeddedPlugin.class);
 
         if (annotation == null) {
@@ -83,10 +93,10 @@ public class PluginManager {
         data.description = annotation.description();
         data.authors = annotation.authors();
         data.dependencies = annotation.dependencies();
-        data.softDependencies = annotation.softDependencies();
-        data.mainClass = clazz.getName();
+        data.soft_dependencies = annotation.softDependencies();
+        data.main = clazz.getName();
 
-        this.loadPlugin(data);
+        this.loadEmbeddedPlugin(data);
     }
 
     public void unloadPlugin(Plugin plugin, boolean removeFromList) {
@@ -115,5 +125,9 @@ public class PluginManager {
 
     public void unloadPlugin(Plugin plugin) {
         this.unloadPlugin(plugin, true);
+    }
+
+    public void loadPlugins(File pluginsDir) {
+        this.loader.loadPlugins(pluginsDir, this);
     }
 }

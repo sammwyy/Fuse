@@ -8,6 +8,7 @@ An efficient minecraft server with high-level API and plugin support.
 - Plugin support.
 - Polar world format support.
 - Command system.
+- Translation support.
 
 ## Credits
 

@@ -1,6 +1,6 @@
 @echo off
 :loop
 cls
-java -jar ..\build\libs\Fuse-all.jar anvil ./anvil_world ./worlds/world.polar
+java -jar ..\fuse_server\build\libs\Fuse_server-all.jar anvil ./anvil_world ./worlds/world.polar
 pause
 goto loop

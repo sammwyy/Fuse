@@ -1,6 +1,8 @@
 
 package fuse;
 
+import java.io.File;
+
 import fuse.config.FuseServerConfig;
 import fuse.server.FuseServer;
 import fuse.utils.FileUtils;
@@ -15,9 +17,20 @@ public class Fuse {
 
         FuseServer server = new FuseServer(config);
 
-        server.getPluginManager().loadPlugin(DEMO_MessageOnJoin.class);
-        server.getPluginManager().loadPlugin(DEMO_SayCommand.class);
-        server.getPluginManager().loadPlugin(DEMO_Translatable.class);
+        // Plugin loader.
+        File pluginsDir = FileUtils.getCurrentChild("plugins");
+
+        if (!pluginsDir.exists() && !headless) {
+            pluginsDir.mkdirs();
+        }
+
+        if (pluginsDir.exists()) {
+            server.getPluginManager().loadPlugins(pluginsDir);
+        }
+
+        server.getPluginManager().loadEmbeddedPlugin(DEMO_MessageOnJoin.class);
+        server.getPluginManager().loadEmbeddedPlugin(DEMO_SayCommand.class);
+        server.getPluginManager().loadEmbeddedPlugin(DEMO_Translatable.class);
 
         server.start();
     }
