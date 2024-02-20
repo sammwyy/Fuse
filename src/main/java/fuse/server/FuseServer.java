@@ -1,8 +1,10 @@
 package fuse.server;
 
+import fuse.config.FuseServerConfig;
 import fuse.events.EventManager;
-import fuse.player.FusePlayerManager;
+import fuse.player.PlayerManager;
 import fuse.plugins.PluginManager;
+import fuse.world.WorldManager;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.Event;
 import net.minestom.server.event.EventNode;
@@ -18,22 +20,24 @@ public class FuseServer {
     // Fuse server
     private FuseServerConfig config;
     private EventManager eventManager;
-    private FusePlayerManager playerManager;
+    private PlayerManager playerManager;
     private PluginManager pluginManager;
+    private WorldManager worldManager;
 
     public FuseServer(FuseServerConfig config) {
         this.server = MinecraftServer.init();
         this.config = config;
 
-        MinecraftServer.setCompressionThreshold(config.compressionThreshold);
+        MinecraftServer.setCompressionThreshold(config.server.compression_threshold);
         MinecraftServer.setBrandName("FuseMC Server");
 
         this.eventManager = new EventManager();
         this.eventHandler = MinecraftServer.getGlobalEventHandler();
         this.eventNode = EventNode.all("internal");
         this.eventHandler.addChild(this.eventNode);
-        this.playerManager = new FusePlayerManager();
+        this.playerManager = new PlayerManager();
         this.pluginManager = new PluginManager(this);
+        this.worldManager = new WorldManager(config.worlds);
     }
 
     // Getters
@@ -45,12 +49,16 @@ public class FuseServer {
         return this.eventManager;
     }
 
-    public FusePlayerManager getPlayerManager() {
+    public PlayerManager getPlayerManager() {
         return this.playerManager;
     }
 
     public PluginManager getPluginManager() {
         return this.pluginManager;
+    }
+
+    public WorldManager getWorldManager() {
+        return this.worldManager;
     }
 
     // Broadcast
@@ -61,20 +69,19 @@ public class FuseServer {
     }
 
     // Start the server
-    public void start() {
+    public void start() throws Exception {
         FuseHandler handler = new FuseHandler(this);
         handler.register(this.eventNode);
 
         FuseTicker ticker = new FuseTicker();
         ticker.register(this.eventHandler);
 
-        FuseInstanceManager instanceManager = new FuseInstanceManager();
-        instanceManager.create();
+        this.worldManager.loadWorld(this.config.worlds.default_world);
 
-        if (this.config.onlineMode) {
+        if (this.config.server.online_mode) {
             MojangAuth.init();
         }
 
-        server.start(this.config.bind, this.config.port);
+        server.start(this.config.server.bind, this.config.server.port);
     }
 }

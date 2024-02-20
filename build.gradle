@@ -10,6 +10,9 @@ repositories {
 
     // Use JitPack for resolving dependencies.
     maven { url 'https://jitpack.io' }
+
+    // Use the GlareMasters repository for resolving Flow NBT.
+    maven { url "https://repo.glaremasters.me/repository/concuncan/" }
 }
 
 dependencies {
@@ -17,15 +20,26 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 
     // Implement Minestom.
-    implementation 'dev.hollowcube:minestom-ce:cf4a2d134e'
+    implementation 'net.minestom:minestom-snapshots:7320437640'
 
-    // Implement Gson.
-    implementation 'com.google.code.gson:gson:2.10.1'
+    // Implement Toml4J.
+    implementation 'com.moandjiezana.toml:toml4j:0.7.2'
+
+    // Implement Polar.
+    implementation 'dev.hollowcube:polar:1.7.1'
+
+    // Implement picocli.
+    implementation 'info.picocli:picocli:4.7.5'
+
+    // Implement zstd.
+    // implementation 'com.github.luben:zstd-jni:1.5.5-11'
+    // Implement Flow NBT.
+    // implementation 'com.flowpowered:flow-nbt:2.0.0'
 }
 
 application {
     // Define the main class for the application.
-    mainClass = 'fuse.App'
+    mainClass = 'fuse_cli.FuseCLI'
 }
 
 tasks.named('test') {

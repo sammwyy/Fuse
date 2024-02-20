@@ -1,17 +1,17 @@
 package fuse.events.player;
 
 import fuse.events.Event;
-import fuse.player.FusePlayer;
+import net.minestom.server.entity.Player;
 
 public class PlayerQuitEvent extends Event {
-    private FusePlayer player;
+    private Player player;
 
-    public PlayerQuitEvent(FusePlayer player) {
+    public PlayerQuitEvent(Player player) {
         super();
         this.player = player;
     }
 
-    public FusePlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 }

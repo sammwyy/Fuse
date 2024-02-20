@@ -1,0 +1,17 @@
+[server]
+bind = "0.0.0.0"
+port = 25565
+online_mode = true
+compression_threshold = 256
+
+[query]
+max_players = 20
+hide_players = false
+motd = "&dA Fuse Server"
+version = "1.20.4"
+playersSample = []
+
+[worlds]
+type = "file:polar"
+path = "worlds"
+default_world = "world"
