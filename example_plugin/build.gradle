@@ -6,9 +6,21 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    
+    // Use JitPack for resolving dependencies.
+    maven { url 'https://jitpack.io' }
+    
+    // Use the Panda repository for resolving LiteCommands.
+    maven { url 'https://repo.panda-lang.org/releases' }
 }
 
 dependencies {
     // Include parent project as a dependency
     implementation project(':fuse_server')
+
+    // Implement LiteCommands.
+    implementation 'dev.rollczi:litecommands-minestom:3.4.0'
+
+    // Implement Minestom.
+    implementation 'net.minestom:minestom-snapshots:7320437640'
 }
