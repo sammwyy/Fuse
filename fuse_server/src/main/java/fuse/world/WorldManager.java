@@ -49,6 +49,7 @@ public class WorldManager {
 
         World world = new World(worldName, instance, chunkLoader);
         worlds.put(worldName, world);
+        world.init();
         return world;
     }
 

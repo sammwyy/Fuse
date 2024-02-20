@@ -9,6 +9,8 @@ An efficient minecraft server with high-level API and plugin support built on to
 - Polar world format support.
 - Command system.
 - Translation support.
+- Per plugin configuration.
+- Headless mode (No file generation).
 
 ## Plugin API
 

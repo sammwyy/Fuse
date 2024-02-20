@@ -16,6 +16,7 @@ import fuse.i18n.I18nContainer;
 import fuse.plugins.handlers.FuseInvalidUsageHandler;
 import fuse.plugins.handlers.FusePermissionMessageHandler;
 import fuse.server.FuseServer;
+import fuse.services.ServiceManager;
 import fuse.utils.PluginUtils;
 import net.minestom.server.command.CommandSender;
 
@@ -44,8 +45,19 @@ public class Plugin {
             throw new RuntimeException("Plugin " + metadata.name + " already loaded");
         }
 
-        if (!this.dataFolder.exists() && !this.manager.getServer().isHeadless()) {
-            this.dataFolder.mkdirs();
+        if (this.dataFolder != null) {
+            if (!this.dataFolder.exists() && !this.manager.getServer().isHeadless()) {
+                this.dataFolder.mkdirs();
+            }
+
+            if (this.dataFolder.exists()) {
+                // Register translations
+                try {
+                    this.translations = I18n.createContainer(getID(), true, PluginUtils.getTranslationFiles(this));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         this.configManager = new ConfigManager(this.pluginFile, this.dataFolder);
@@ -54,13 +66,6 @@ public class Plugin {
         this.commands = LiteMinestomFactory.builder()
                 .missingPermission(new FusePermissionMessageHandler())
                 .invalidUsage(new FuseInvalidUsageHandler());
-
-        // Register translations
-        try {
-            this.translations = I18n.createContainer(getID(), true, PluginUtils.getTranslationFiles(this));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         this.onInit();
     }
@@ -100,6 +105,10 @@ public class Plugin {
 
     public PluginManager getPluginManager() {
         return this.manager;
+    }
+
+    public ServiceManager getServiceManager() {
+        return this.manager.getServer().getServiceManager();
     }
 
     public FuseServer getServer() {

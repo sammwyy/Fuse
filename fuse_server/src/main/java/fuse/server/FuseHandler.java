@@ -77,7 +77,7 @@ public class FuseHandler {
         var instances = MinecraftServer.getInstanceManager().getInstances();
         Instance instance = instances.stream().findFirst().get();
         e.setSpawningInstance(instance);
-        player.setRespawnPoint(new Pos(0, 40f, 0));
+        player.setRespawnPoint(new Pos(0, 0f, 0));
     }
 
     void onEntityAttack(EntityAttackEvent e) {

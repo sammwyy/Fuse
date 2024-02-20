@@ -4,6 +4,7 @@ import fuse.config.FuseServerConfig;
 import fuse.events.EventManager;
 import fuse.player.PlayerManager;
 import fuse.plugins.PluginManager;
+import fuse.services.ServiceManager;
 import fuse.world.WorldManager;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.Event;
@@ -23,6 +24,7 @@ public class FuseServer {
     private EventManager eventManager;
     private PlayerManager playerManager;
     private PluginManager pluginManager;
+    private ServiceManager serviceManager;
     private WorldManager worldManager;
 
     public FuseServer(FuseServerConfig config, boolean headless) {
@@ -39,6 +41,7 @@ public class FuseServer {
         this.eventHandler.addChild(this.eventNode);
         this.playerManager = new PlayerManager();
         this.pluginManager = new PluginManager(this);
+        this.serviceManager = new ServiceManager();
         this.worldManager = new WorldManager(config.worlds);
     }
 
@@ -57,6 +60,10 @@ public class FuseServer {
 
     public PluginManager getPluginManager() {
         return this.pluginManager;
+    }
+
+    public ServiceManager getServiceManager() {
+        return this.serviceManager;
     }
 
     public WorldManager getWorldManager() {
