@@ -15,7 +15,7 @@ import net.minestom.server.entity.Player;
 class HelloCommand {
     @Execute
     public void execute(@Context Player player) {
-        I18n.sendMessage(player, "ExamplePlugin:hello");
+        I18n.sendMessage(player, "ExamplePlugin:category.greeting");
     }
 }
 
@@ -33,9 +33,6 @@ public class FuseExamplePlugin extends Plugin {
     @Override
     public void onStart() {
         System.out.println("FuseExamplePlugin has started!");
-
-        this.getTranslations().add("en", "hello", "Hello, this is just an example!");
-        this.getTranslations().add("es", "hello", "¡Hola, esto es solo un ejemplo!");
 
         this.getEventListener().on(PlayerJoinEvent.class, this::onPlayerJoin);
         this.getEventListener().on(PlayerQuitEvent.class, this::onPlayerQuit);

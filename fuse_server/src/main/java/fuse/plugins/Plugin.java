@@ -41,7 +41,7 @@ public class Plugin {
         this.commands = LiteMinestomFactory.builder()
                 .missingPermission(new FusePermissionMessageHandler())
                 .invalidUsage(new FuseInvalidUsageHandler());
-        this.translations = I18n.createContainer(getID(), true);
+        this.translations = I18n.createContainer(getID(), true, this.pluginFile);
         this.onInit();
     }
 

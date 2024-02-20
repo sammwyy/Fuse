@@ -15,6 +15,7 @@ public class PluginMetadata {
     public String[] authors = new String[0];
     public String[] dependencies = new String[0];
     public String[] soft_dependencies = new String[0];
+    public String website = null;
 
     public static PluginMetadata readFrom(File file) {
         String raw = null;

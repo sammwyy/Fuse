@@ -1,6 +1,6 @@
 # Fuse
 
-An efficient minecraft server with high-level API and plugin support.
+An efficient minecraft server with high-level API and plugin support built on top of Minestom.
 
 ## Features
 
@@ -9,6 +9,10 @@ An efficient minecraft server with high-level API and plugin support.
 - Polar world format support.
 - Command system.
 - Translation support.
+
+## Plugin API
+
+Fuse provides a high-level API for plugin development. Look the [Example Plugin](example_plugin) for more information.
 
 ## Credits
 

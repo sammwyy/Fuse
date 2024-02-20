@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -54,5 +55,32 @@ public class FileUtils {
                 return builder.toString();
             }
         }
+    }
+
+    public static List<RAMFile> getChildrenInJar(File file, String parent) throws IOException {
+        List<RAMFile> files = new ArrayList<>();
+
+        try (JarFile jarFile = new JarFile(file)) {
+            jarFile.stream().forEach(entry -> {
+                if (entry.getName().startsWith(parent) && !entry.isDirectory()) {
+                    try (InputStream is = jarFile.getInputStream(entry)) {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                        StringBuilder builder = new StringBuilder();
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            builder.append(line);
+                            builder.append('\n');
+                        }
+
+                        files.add(new RAMFile(entry.getName(), builder.toString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        return files;
     }
 }
