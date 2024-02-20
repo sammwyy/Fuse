@@ -5,6 +5,8 @@ import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.minestom.LiteMinestomFactory;
 import dev.rollczi.litecommands.minestom.LiteMinestomSettings;
 import fuse.events.EventListenerGroup;
+import fuse.i18n.I18n;
+import fuse.i18n.I18nContainer;
 import fuse.plugins.handlers.FuseInvalidUsageHandler;
 import fuse.plugins.handlers.FusePermissionMessageHandler;
 import fuse.server.FuseServer;
@@ -15,6 +17,7 @@ public class Plugin {
     private PluginManager manager;
     private PluginState state;
     private LiteCommandsBuilder<CommandSender, LiteMinestomSettings, ?> commands;
+    private I18nContainer translations;
 
     protected void _init(PluginMetadata metadata, PluginManager manager) {
         if (this.metadata != null) {
@@ -24,14 +27,15 @@ public class Plugin {
         this.metadata = metadata;
         this.manager = manager;
         this.state = PluginState.UNLOADED;
-        this.commands = LiteMinestomFactory.builder()
-                .missingPermission(new FusePermissionMessageHandler())
-                .invalidUsage(new FuseInvalidUsageHandler());
 
         if (this.manager.isPluginLoaded(this.getID())) {
             throw new RuntimeException("Plugin " + metadata.name + " already loaded");
         }
 
+        this.commands = LiteMinestomFactory.builder()
+                .missingPermission(new FusePermissionMessageHandler())
+                .invalidUsage(new FuseInvalidUsageHandler());
+        this.translations = I18n.createContainer(getID(), true);
         this.onInit();
     }
 
@@ -48,6 +52,7 @@ public class Plugin {
     }
 
     // Getters
+
     public PluginMetadata getMetaData() {
         return this.metadata;
     }
@@ -58,6 +63,10 @@ public class Plugin {
 
     public FuseServer getServer() {
         return this.manager.getServer();
+    }
+
+    public I18nContainer getTranslations() {
+        return this.translations;
     }
 
     // Utils
