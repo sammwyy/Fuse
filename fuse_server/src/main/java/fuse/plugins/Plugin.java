@@ -1,17 +1,22 @@
 package fuse.plugins;
 
 import java.io.File;
+import java.io.IOException;
+
+import com.moandjiezana.toml.Toml;
 
 import dev.rollczi.litecommands.LiteCommandsBuilder;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.minestom.LiteMinestomFactory;
 import dev.rollczi.litecommands.minestom.LiteMinestomSettings;
+import fuse.config.ConfigManager;
 import fuse.events.EventListenerGroup;
 import fuse.i18n.I18n;
 import fuse.i18n.I18nContainer;
 import fuse.plugins.handlers.FuseInvalidUsageHandler;
 import fuse.plugins.handlers.FusePermissionMessageHandler;
 import fuse.server.FuseServer;
+import fuse.utils.PluginUtils;
 import net.minestom.server.command.CommandSender;
 
 public class Plugin {
@@ -22,6 +27,7 @@ public class Plugin {
     private I18nContainer translations;
     private File dataFolder;
     private File pluginFile;
+    private ConfigManager configManager;
 
     protected void _init(PluginMetadata metadata, PluginManager manager, File dataFolder, File pluginFile) {
         if (this.metadata != null) {
@@ -38,10 +44,24 @@ public class Plugin {
             throw new RuntimeException("Plugin " + metadata.name + " already loaded");
         }
 
+        if (!this.dataFolder.exists() && !this.manager.getServer().isHeadless()) {
+            this.dataFolder.mkdirs();
+        }
+
+        this.configManager = new ConfigManager(this.pluginFile, this.dataFolder);
+
+        // Register commands
         this.commands = LiteMinestomFactory.builder()
                 .missingPermission(new FusePermissionMessageHandler())
                 .invalidUsage(new FuseInvalidUsageHandler());
-        this.translations = I18n.createContainer(getID(), true, this.pluginFile);
+
+        // Register translations
+        try {
+            this.translations = I18n.createContainer(getID(), true, PluginUtils.getTranslationFiles(this));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.onInit();
     }
 
@@ -58,6 +78,14 @@ public class Plugin {
     }
 
     // Getters
+    public Toml getConfig(String file) {
+        return this.configManager.getConfig(file);
+    }
+
+    public <T> T getConfig(String file, Class<T> clazz) {
+        return this.configManager.getConfig(file, clazz);
+    }
+
     public File getFile() {
         return this.pluginFile;
     }

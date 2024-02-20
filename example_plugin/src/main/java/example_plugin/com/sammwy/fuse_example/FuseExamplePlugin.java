@@ -3,7 +3,7 @@ package com.sammwy.fuse_example;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
-
+import fuse.config.Configuration;
 import fuse.events.player.PlayerJoinEvent;
 import fuse.events.player.PlayerQuitEvent;
 import fuse.i18n.I18n;
@@ -19,6 +19,11 @@ class HelloCommand {
     }
 }
 
+// Configuration
+class ExampleConfig extends Configuration {
+    public String hello = "Testing message from config";
+}
+
 public class FuseExamplePlugin extends Plugin {
     // Listeners.
     private void onPlayerJoin(PlayerJoinEvent e) {
@@ -32,7 +37,8 @@ public class FuseExamplePlugin extends Plugin {
 
     @Override
     public void onStart() {
-        System.out.println("FuseExamplePlugin has started!");
+        ExampleConfig config = this.getConfig("config.toml", ExampleConfig.class);
+        System.out.println("FuseExamplePlugin has started: " + config.hello);
 
         this.getEventListener().on(PlayerJoinEvent.class, this::onPlayerJoin);
         this.getEventListener().on(PlayerQuitEvent.class, this::onPlayerQuit);

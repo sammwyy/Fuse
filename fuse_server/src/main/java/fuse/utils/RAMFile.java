@@ -13,6 +13,15 @@ public class RAMFile {
         return this.name;
     }
 
+    public String getFileName() {
+        if (this.name.contains("/")) {
+            String[] parts = this.name.split("/");
+            return parts[parts.length - 1];
+        }
+
+        return this.name;
+    }
+
     public String getRaw() {
         return this.raw;
     }

@@ -1,14 +1,11 @@
 package fuse.i18n;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.moandjiezana.toml.Toml;
 
-import fuse.utils.FileUtils;
 import fuse.utils.RAMFile;
 import fuse.utils.TomlUtils;
 import net.minestom.server.entity.Player;
@@ -25,25 +22,19 @@ public class I18n {
         return container;
     }
 
-    public static I18nContainer createContainer(String pluginName, boolean register, File jarFile) {
+    public static I18nContainer createContainer(String pluginName, boolean register, List<RAMFile> files) {
         I18nContainer container = createContainer(pluginName, true);
 
-        try {
-            List<RAMFile> files = FileUtils.getChildrenInJar(jarFile, "lang");
+        for (RAMFile file : files) {
+            String lang = file.getFileName().split("[.]")[0];
+            String raw = file.getRaw();
 
-            for (RAMFile file : files) {
-                String lang = file.getName().split("/")[1].split("[.]")[0];
-                String raw = file.getRaw();
+            Toml toml = new Toml().read(raw);
+            Map<String, String> values = TomlUtils.getNested(toml);
 
-                Toml toml = new Toml().read(raw);
-                Map<String, String> values = TomlUtils.getNested(toml);
-
-                for (Map.Entry<String, String> entry : values.entrySet()) {
-                    container.add(lang, entry.getKey(), entry.getValue());
-                }
+            for (Map.Entry<String, String> entry : values.entrySet()) {
+                container.add(lang, entry.getKey(), entry.getValue());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         if (register) {

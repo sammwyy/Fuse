@@ -2,9 +2,11 @@ package fuse.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -82,5 +84,34 @@ public class FileUtils {
         }
 
         return files;
+    }
+
+    public static List<RAMFile> getChildrenInDir(File file) {
+        List<RAMFile> files = new ArrayList<>();
+
+        for (File child : file.listFiles()) {
+            if (child.isDirectory()) {
+                files.addAll(getChildrenInDir(child));
+            } else {
+                try {
+                    files.add(new RAMFile(child.getName(), new String(Files.readAllBytes(child.toPath()))));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return files;
+    }
+
+    public static void writeToFile(File newFile, String raw) {
+        try {
+            newFile.createNewFile();
+            FileWriter writer = new FileWriter(newFile);
+            writer.write(raw);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

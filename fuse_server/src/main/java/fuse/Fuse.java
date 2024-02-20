@@ -12,7 +12,7 @@ public class Fuse {
         FuseServerConfig config = headless ? FuseServerConfig.fromEnv()
                 : FuseServerConfig.load(FileUtils.getCurrentChild("config.toml"));
 
-        FuseServer server = new FuseServer(config);
+        FuseServer server = new FuseServer(config, headless);
 
         // Plugin loader.
         File pluginsDir = FileUtils.getCurrentChild("plugins");

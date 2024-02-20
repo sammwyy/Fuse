@@ -18,14 +18,16 @@ public class FuseServer {
     private EventNode<Event> eventNode;
 
     // Fuse server
+    private boolean headless;
     private FuseServerConfig config;
     private EventManager eventManager;
     private PlayerManager playerManager;
     private PluginManager pluginManager;
     private WorldManager worldManager;
 
-    public FuseServer(FuseServerConfig config) {
+    public FuseServer(FuseServerConfig config, boolean headless) {
         this.server = MinecraftServer.init();
+        this.headless = headless;
         this.config = config;
 
         MinecraftServer.setCompressionThreshold(config.server.compression_threshold);
@@ -59,6 +61,10 @@ public class FuseServer {
 
     public WorldManager getWorldManager() {
         return this.worldManager;
+    }
+
+    public boolean isHeadless() {
+        return this.headless;
     }
 
     // Broadcast
