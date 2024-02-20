@@ -52,6 +52,7 @@ public class PluginManager {
 
             // Trying to start plugin.
             plugin.onStart();
+            plugin.getCommands().build(true);
             System.out.println("Loaded plugin " + data.name);
         } catch (Exception e) {
             System.out.println("Failed to load plugin " + data.name);

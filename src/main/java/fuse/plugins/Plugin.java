@@ -1,12 +1,20 @@
 package fuse.plugins;
 
+import dev.rollczi.litecommands.LiteCommandsBuilder;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.minestom.LiteMinestomFactory;
+import dev.rollczi.litecommands.minestom.LiteMinestomSettings;
 import fuse.events.EventListenerGroup;
+import fuse.plugins.handlers.FuseInvalidUsageHandler;
+import fuse.plugins.handlers.FusePermissionMessageHandler;
 import fuse.server.FuseServer;
+import net.minestom.server.command.CommandSender;
 
 public class Plugin {
     private PluginMetadata metadata;
     private PluginManager manager;
     private PluginState state;
+    private LiteCommandsBuilder<CommandSender, LiteMinestomSettings, ?> commands;
 
     protected void _init(PluginMetadata metadata, PluginManager manager) {
         if (this.metadata != null) {
@@ -16,10 +24,15 @@ public class Plugin {
         this.metadata = metadata;
         this.manager = manager;
         this.state = PluginState.UNLOADED;
+        this.commands = LiteMinestomFactory.builder()
+                .missingPermission(new FusePermissionMessageHandler())
+                .invalidUsage(new FuseInvalidUsageHandler());
 
         if (this.manager.isPluginLoaded(this.getID())) {
             throw new RuntimeException("Plugin " + metadata.name + " already loaded");
         }
+
+        this.onInit();
     }
 
     protected void setInternalState(PluginState state) {
@@ -28,6 +41,10 @@ public class Plugin {
 
     protected PluginState getInternalState() {
         return this.state;
+    }
+
+    protected LiteCommandsBuilder<CommandSender, LiteMinestomSettings, ?> getCommands() {
+        return this.commands;
     }
 
     // Getters
@@ -53,7 +70,18 @@ public class Plugin {
         return this.getServer().getEventManager().getEventListener(this);
     }
 
+    public void registerCommand(Object obj) {
+        if (obj.getClass().isAnnotationPresent(Command.class)) {
+            this.commands.commands(obj);
+        } else {
+            throw new RuntimeException("Object " + obj.getClass().getName() + " is not a command");
+        }
+    }
+
     // Plugin events
+    public void onInit() {
+    }
+
     public void onStart() {
     }
 

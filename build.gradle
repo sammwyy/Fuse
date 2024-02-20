@@ -12,7 +12,10 @@ repositories {
     maven { url 'https://jitpack.io' }
 
     // Use the GlareMasters repository for resolving Flow NBT.
-    maven { url "https://repo.glaremasters.me/repository/concuncan/" }
+    // maven { url "https://repo.glaremasters.me/repository/concuncan/" }
+    
+    // Use the Panda repository for resolving LiteCommands.
+    maven { url 'https://repo.panda-lang.org/releases' }
 }
 
 dependencies {
@@ -30,6 +33,12 @@ dependencies {
 
     // Implement picocli.
     implementation 'info.picocli:picocli:4.7.5'
+
+    // Implement LiteCommands.
+    implementation 'dev.rollczi:litecommands-minestom:3.4.0'
+
+    // Implement Minimessage.
+    implementation 'net.kyori:adventure-text-minimessage:4.15.0'
 
     // Implement zstd.
     // implementation 'com.github.luben:zstd-jni:1.5.5-11'
