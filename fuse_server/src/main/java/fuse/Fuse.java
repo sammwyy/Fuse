@@ -6,7 +6,6 @@ import java.io.File;
 import fuse.config.FuseServerConfig;
 import fuse.server.FuseServer;
 import fuse.utils.FileUtils;
-import fuse_demo.DEMO_Scoreboard;
 
 public class Fuse {
     public static void launch(boolean headless) throws Exception {
@@ -25,8 +24,6 @@ public class Fuse {
         if (pluginsDir.exists()) {
             server.getPluginManager().loadPlugins(pluginsDir);
         }
-
-        server.getPluginManager().loadEmbeddedPlugin(DEMO_Scoreboard.class);
 
         server.start();
     }
