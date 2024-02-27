@@ -1,4 +1,4 @@
-main = "com.sammwy.fuse_example.FuseExamplePlugin"
+main = "fuse_example.FuseExamplePlugin"
 version = "1.0.0"
 name = "ExamplePlugin"
 api = "fuse"
